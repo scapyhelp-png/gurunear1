@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GuruNear | Find Trusted Tutors Near You</title>
+  <!-- Google Fonts + Tailwind CSS + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      background-color: #F9FAFB;
+      scroll-behavior: smooth;
+    }
+    .scrollbar-custom::-webkit-scrollbar {
+      height: 6px;
+    }
+    .scrollbar-custom::-webkit-scrollbar-track {
+      background: #E5E7EB;
+      border-radius: 10px;
+    }
+    .scrollbar-custom::-webkit-scrollbar-thumb {
+      background: #2563EB;
+      border-radius: 10px;
+    }
+    .tutor-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .tutor-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15);
+    }
+    .filter-chip-active {
+      background-color: #2563EB;
+      color: white;
+      border-color: #2563EB;
+    }
+    .featured-badge {
+      background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+      color: #92400E;
+    }
+    .gradient-hero-bg {
+      background: linear-gradient(135deg, #F9FAFB 0%, #EFF6FF 100%);
+    }
+    .btn-primary {
+      transition: all 0.2s ease;
+    }
+    .btn-primary:hover {
+      transform: scale(1.02);
+      background-color: #1D4ED8;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Navigation (minimal, floating style) -->
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="bg-gradient-to-br from-blue-600 to-blue-400 w-9 h-9 rounded-xl flex items-center justify-center shadow-md">
+          <i class="fas fa-chalkboard-user text-white text-lg"></i>
+        </div>
+        <span class="text-2xl font-bold bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent">GuruNear</span>
+      </div>
+      <div class="hidden md:flex gap-6 text-gray-600 font-medium">
+        <a href="#" class="hover:text-blue-600 transition">Home</a>
+        <a href="#tutors" class="hover:text-blue-600 transition">Tutors</a>
+        <a href="#subjects" class="hover:text-blue-600 transition">Subjects</a>
+        <a href="#tutor-cta" class="hover:text-blue-600 transition">For Tutors</a>
+      </div>
+      <div class="flex gap-3">
+        <button class="hidden sm:block text-gray-700 font-semibold px-4 py-2 rounded-full hover:bg-gray-100 transition">Login</button>
+        <button class="bg-green-600 text-white px-5 py-2 rounded-full font-semibold shadow-md hover:bg-green-700 transition flex items-center gap-2 text-sm"><i class="fas fa-chalkboard"></i> Become a Tutor</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- 1. HERO SECTION -->
+    <section class="gradient-hero-bg overflow-hidden">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 py-12 md:py-20">
+        <div class="flex flex-col lg:flex-row items-center gap-12">
+          <!-- Left text -->
+          <div class="flex-1 text-center lg:text-left">
+            <div class="inline-block bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-5">
+              <i class="fas fa-shield-alt mr-1"></i> India’s most trusted tuition network
+            </div>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight text-gray-900">
+              Find Trusted <span class="text-blue-600">Tutors</span> Near You
+            </h1>
+            <p class="text-gray-500 text-lg mt-5 max-w-2xl mx-auto lg:mx-0">
+              Connect with verified teachers in your area for school & competitive exams. Class 1–12, IIT‑JEE, NEET & more.
+            </p>
+            <!-- Search Bar + CTAs -->
+            <div class="mt-8 bg-white p-2 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto lg:mx-0">
+              <div class="flex items-center bg-gray-50 rounded-xl px-4 py-2 flex-1 gap-2">
+                <i class="fas fa-map-marker-alt text-blue-500"></i>
+                <input type="text" id="locationInput" placeholder="Your city / locality" class="bg-transparent outline-none flex-1 text-gray-700" value="Mumbai">
+              </div>
+              <div class="flex items-center bg-gray-50 rounded-xl px-4 py-2 flex-1 gap-2">
+                <i class="fas fa-book-open text-green-600"></i>
+                <input type="text" id="subjectKeywordInput" placeholder="Subject (Math, Science...)" class="bg-transparent outline-none flex-1 text-gray-700">
+              </div>
+              <button id="findTutorsBtn" class="bg-blue-600 text-white font-bold px-6 py-3 rounded-xl btn-primary shadow-md flex items-center justify-center gap-2"><i class="fas fa-search"></i> Find Tutors</button>
+            </div>
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-5 mt-6">
+              <a href="#" class="text-green-700 font-semibold flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full"><i class="fas fa-chalkboard-user"></i> Become a Tutor →</a>
+              <span class="text-gray-400 text-sm flex items-center gap-1"><i class="fas fa-check-circle text-green-500"></i> Trusted by 50,000+ parents</span>
+            </div>
+          </div>
+          <!-- Illustration right -->
+          <div class="flex-1 flex justify-center relative">
+            <div class="relative w-72 h-72 md:w-96 md:h-96 bg-gradient-to-tr from-blue-100 to-white rounded-full flex items-center justify-center shadow-2xl">
+              <i class="fas fa-chalkboard-teacher text-7xl text-blue-600 absolute top-12 left-8 opacity-80"></i>
+              <i class="fas fa-user-graduate text-6xl text-green-600 absolute bottom-12 right-8 opacity-80"></i>
+              <i class="fas fa-map-marked-alt text-5xl text-blue-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+              <div class="absolute -bottom-4 -right-4 bg-white rounded-full p-2 shadow-lg"><i class="fas fa-location-dot text-blue-500 text-xl"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. TRUST SECTION (badges + stats) -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Why parents & students trust GuruNear</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-gray-50 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
+            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><i class="fas fa-check-circle text-blue-600 text-3xl"></i></div>
+            <h3 class="text-xl font-bold">Verified Tutors</h3>
+            <p class="text-gray-500 mt-2">ID, qualification & background verified</p>
+          </div>
+          <div class="bg-gray-50 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
+            <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><i class="fas fa-star text-green-600 text-3xl"></i></div>
+            <h3 class="text-xl font-bold">Ratings & Reviews</h3>
+            <p class="text-gray-500 mt-2">Real feedback from local parents</p>
+          </div>
+          <div class="bg-gray-50 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
+            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><i class="fas fa-map-marker-alt text-blue-600 text-3xl"></i></div>
+            <h3 class="text-xl font-bold">Local Discovery</h3>
+            <p class="text-gray-500 mt-2">Find tutors within 5 km radius</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap justify-center gap-12 mt-12 text-center">
+          <div><span class="text-4xl font-black text-blue-600">10,000+</span><p class="text-gray-500">Expert Tutors</p></div>
+          <div><span class="text-4xl font-black text-green-600">50,000+</span><p class="text-gray-500">Students Helped</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. HOW IT WORKS (3 steps) -->
+    <section class="py-16 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Get the right tutor in 3 simple steps</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-2xl p-6 shadow-md text-center"><div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div><i class="fas fa-search text-4xl text-blue-500 mb-3 block"></i><h3 class="text-xl font-bold">Search nearby</h3><p class="text-gray-500">Enter location & subject, see available tutors</p></div>
+          <div class="bg-white rounded-2xl p-6 shadow-md text-center"><div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div><i class="fas fa-clipboard-list text-4xl text-blue-500 mb-3 block"></i><h3 class="text-xl font-bold">Compare profiles</h3><p class="text-gray-500">Check verified badges, reviews & fees</p></div>
+          <div class="bg-white rounded-2xl p-6 shadow-md text-center"><div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div><i class="fas fa-comment-dots text-4xl text-blue-500 mb-3 block"></i><h3 class="text-xl font-bold">Contact or book demo</h3><p class="text-gray-500">Call, WhatsApp or schedule a free demo class</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TOP TUTORS SECTION with FILTERS (Horizontal scroll + Monetization highlight) -->
+    <section id="tutors" class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-3xl font-bold text-gray-900">🎓 Top Tutors near you</h2>
+            <p class="text-gray-500 mt-1">Hand-picked & verified educators</p>
+          </div>
+          <div class="flex gap-2 text-sm bg-blue-50 px-3 py-1.5 rounded-full"><i class="fas fa-gem text-yellow-500"></i><span class="font-medium">Featured tutors get priority visibility</span></div>
+        </div>
+        <!-- Filter row -->
+        <div class="flex flex-wrap gap-3 items-center mb-8 p-4 bg-gray-50 rounded-2xl">
+          <select id="classFilter" class="bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-300 outline-none"><option value="all">All Classes</option><option value="1-5">Class 1-5</option><option value="6-8">Class 6-8</option><option value="9-10">Class 9-10</option><option value="11-12">Class 11-12</option><option value="competitive">Competitive Exams</option></select>
+          <select id="subjectFilter" class="bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm"><option value="all">All Subjects</option><option value="Math">Math</option><option value="Science">Science</option><option value="English">English</option><option value="Physics">Physics</option><option value="Chemistry">Chemistry</option><option value="Competitive Exams">Competitive Exams</option></select>
+          <select id="feesFilter" class="bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm"><option value="all">All Fees</option><option value="under500">Under ₹500/hr</option><option value="500-1000">₹500 - ₹1000/hr</option><option value="above1000">Above ₹1000/hr</option></select>
+          <button id="resetFilters" class="text-gray-500 bg-gray-200 px-4 py-2 rounded-xl text-sm hover:bg-gray-300 transition"><i class="fas fa-undo-alt"></i> Reset</button>
+        </div>
+        <!-- Horizontal scroll cards container -->
+        <div class="relative">
+          <div id="tutorsContainer" class="flex overflow-x-auto gap-5 pb-6 scrollbar-custom snap-x"></div>
+          <div class="text-center mt-4 text-sm text-gray-400"><i class="fas fa-arrow-left"></i> scroll to see more tutors <i class="fas fa-arrow-right"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. POPULAR SUBJECTS Grid -->
+    <section id="subjects" class="py-16 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <h2 class="text-3xl font-bold text-center mb-4">Browse by popular subjects</h2>
+        <p class="text-center text-gray-500 mb-10">Find expert tutors for every subject</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+          <div class="subject-chip bg-white rounded-xl p-5 text-center shadow-sm hover:shadow-md transition cursor-pointer" data-subject="Math"><i class="fas fa-calculator text-3xl text-blue-500 mb-2 block"></i><span class="font-semibold">Math</span><span class="text-xs text-gray-400 block">340+ tutors</span></div>
+          <div class="subject-chip bg-white rounded-xl p-5 text-center shadow-sm hover:shadow-md transition cursor-pointer" data-subject="Science"><i class="fas fa-flask text-3xl text-green-500 mb-2 block"></i><span class="font-semibold">Science</span><span class="text-xs text-gray-400 block">280+ tutors</span></div>
+          <div class="subject-chip bg-white rounded-xl p-5 text-center shadow-sm hover:shadow-md transition cursor-pointer" data-subject="English"><i class="fas fa-language text-3xl text-blue-500 mb-2 block"></i><span class="font-semibold">English</span><span class="text-xs text-gray-400 block">195+ tutors</span></div>
+          <div class="subject-chip bg-white rounded-xl p-5 text-center shadow-sm hover:shadow-md transition cursor-pointer" data-subject="Physics"><i class="fas fa-atom text-3xl text-indigo-500 mb-2 block"></i><span class="font-semibold">Physics</span><span class="text-xs text-gray-400 block">210+ tutors</span></div>
+          <div class="subject-chip bg-white rounded-xl p-5 text-center shadow-sm hover:shadow-md transition cursor-pointer" data-subject="Chemistry"><i class="fas fa-vial text-3xl text-purple-500 mb-2 block"></i><span class="font-semibold">Chemistry</span><span class="text-xs text-gray-400 block">190+ tutors</span></div>
+          <div class="subject-chip bg-white rounded-xl p-5 text-center shadow-sm hover:shadow-md transition cursor-pointer" data-subject="Competitive Exams"><i class="fas fa-trophy text-3xl text-yellow-600 mb-2 block"></i><span class="font-semibold">Competitive</span><span class="text-xs text-gray-400 block">450+ tutors</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. FOR TUTORS CONVERSION SECTION (Monetization + upgrade CTA) -->
+    <section id="tutor-cta" class="py-16 bg-gradient-to-r from-blue-50 to-white">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col lg:flex-row items-center gap-12">
+        <div class="flex-1">
+          <div class="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-semibold mb-4"><i class="fas fa-rupee-sign"></i> Boost your teaching business</div>
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">Get Students Near You</h2>
+          <ul class="space-y-3 mb-6">
+            <li class="flex gap-3 items-center"><i class="fas fa-chart-line text-green-600 text-xl"></i><span>Increase visibility in local searches</span></li>
+            <li class="flex gap-3 items-center"><i class="fas fa-bolt text-yellow-500 text-xl"></i><span>Get leads instantly on WhatsApp</span></li>
+            <li class="flex gap-3 items-center"><i class="fas fa-wallet text-blue-500 text-xl"></i><span>Earn more with flexible timings</span></li>
+          </ul>
+          <div class="bg-white rounded-2xl p-5 shadow-md border-l-4 border-blue-500 mb-5">
+            <p class="font-semibold">🔥 Lead-based pricing: Pay only when parents contact you</p>
+            <p class="text-sm text-gray-500">First 5 leads free → then ₹10 per lead. No subscription lock-in.</p>
+          </div>
+          <button class="bg-green-600 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg hover:bg-green-700 transition flex items-center gap-2"><i class="fas fa-user-plus"></i> Register as Tutor →</button>
+          <p class="text-xs text-gray-400 mt-4">Join 10,000+ tutors already growing with GuruNear</p>
+        </div>
+        <div class="flex-1 flex justify-center">
+          <div class="bg-white p-5 rounded-3xl shadow-2xl w-72 text-center"><i class="fas fa-chalkboard-user text-6xl text-blue-500 mb-3"></i><p class="font-bold">Tutor Dashboard</p><div class="bg-gray-100 h-2 w-full rounded-full my-2"></div><div class="flex justify-between text-sm"><span>📊 Profile views: 148</span><span>📞 Leads: 12</span></div><div class="bg-green-100 text-green-800 rounded-full px-3 py-1 text-xs mt-3">⭐ Featured upgrade available</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. REVIEWS / TESTIMONIALS -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        <h2 class="text-3xl font-bold text-center">❤️ Loved by parents & tutors</h2>
+        <div class="grid md:grid-cols-2 gap-8 mt-10">
+          <div class="bg-gray-50 rounded-2xl p-6 shadow-sm"><div class="flex text-yellow-400 text-lg mb-2">★★★★★</div><p class="text-gray-700 italic">"My son’s Maths improved from 60 to 85 in 3 months. Very happy with the tutor we found."</p><div class="flex items-center gap-3 mt-4"><div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center"><i class="fas fa-user-circle text-2xl"></i></div><div><b>Priya S.</b><p class="text-xs text-gray-500">Parent, Mumbai</p></div><i class="fas fa-check-circle text-green-500 ml-auto"></i></div></div>
+          <div class="bg-gray-50 rounded-2xl p-6 shadow-sm"><div class="flex text-yellow-400 text-lg mb-2">★★★★★</div><p class="text-gray-700 italic">"GuruNear helped me find 5 regular students near my home. The platform is easy to use and leads are genuine."</p><div class="flex items-center gap-3 mt-4"><div class="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center"><i class="fas fa-chalkboard-user text-xl"></i></div><div><b>Rahul K.</b><p class="text-xs text-gray-500">Math Tutor, Delhi</p></div><i class="fas fa-certificate text-blue-500 ml-auto"></i></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. MOBILE APP PROMOTION -->
+    <section class="py-16 bg-gradient-to-r from-blue-600 to-blue-400 text-white">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col md:flex-row items-center gap-10">
+        <div class="flex-1 text-center md:text-left">
+          <i class="fas fa-mobile-alt text-5xl mb-4"></i>
+          <h2 class="text-3xl font-bold">Find tutors on the go</h2>
+          <p class="text-blue-50 mt-2 mb-6">Download the GuruNear App – real-time alerts, chat, and demo booking</p>
+          <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+            <div class="bg-black/20 backdrop-blur-sm px-5 py-2 rounded-xl flex items-center gap-2"><i class="fab fa-google-play text-2xl"></i><span>Google Play</span></div>
+            <div class="bg-black/20 backdrop-blur-sm px-5 py-2 rounded-xl flex items-center gap-2"><i class="fab fa-apple text-2xl"></i><span>App Store</span></div>
+          </div>
+        </div>
+        <div class="flex-1 flex justify-center gap-4">
+          <div class="bg-white rounded-3xl p-2 shadow-2xl w-36 h-64 relative"><i class="fas fa-search text-blue-600 absolute top-10 left-3 text-xl"></i><i class="fas fa-user-graduate absolute bottom-10 right-3 text-green-500"></i><div class="bg-gray-200 w-full h-32 rounded-xl mt-8"></div></div>
+          <div class="bg-white rounded-3xl p-2 shadow-2xl w-36 h-64 relative"><i class="fas fa-comment-dots text-blue-500 absolute top-12 left-2"></i><div class="bg-gray-100 w-full h-40 rounded-xl mt-10"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. FOOTER -->
+    <footer class="bg-gray-900 text-gray-300 pt-12 pb-6">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div><div class="flex items-center gap-2 mb-4"><div class="bg-blue-500 w-8 h-8 rounded-lg flex items-center justify-center"><i class="fas fa-chalkboard-user text-white"></i></div><span class="text-white font-bold text-xl">GuruNear</span></div><p class="text-sm">Find trusted tutors near you, India's most reliable tuition network.</p><div class="flex gap-4 mt-4"><i class="fab fa-instagram text-xl hover:text-white"></i><i class="fab fa-facebook text-xl hover:text-white"></i><i class="fab fa-whatsapp text-xl hover:text-white"></i></div></div>
+        <div><h4 class="text-white font-semibold mb-3">For Parents</h4><ul class="space-y-2 text-sm"><li>Browse Tutors</li><li>Popular Subjects</li><li>How it Works</li><li>Safety Guide</li></ul></div>
+        <div><h4 class="text-white font-semibold mb-3">For Tutors</h4><ul class="space-y-2 text-sm"><li>Register as Tutor</li><li>Pricing & Leads</li><li>Featured Plan</li><li>Tutor Resources</li></ul></div>
+        <div><h4 class="text-white font-semibold mb-3">Company</h4><ul class="space-y-2 text-sm"><li>About Us</li><li>Contact</li><li>Privacy Policy</li><li>Terms of Service</li></ul></div>
+      </div>
+      <div class="text-center text-gray-500 text-sm border-t border-gray-800 mt-10 pt-6">© 2025 GuruNear. Made in India 🇮🇳 — Empowering local education</div>
+    </footer>
+  </main>
+
+  <script>
+    // ---------- MOCK TUTORS DATA (production ready demo) ----------
+    const tutorsData = [
+      { id: 1, name: "Anita Sharma", subjects: ["Math", "Physics"], classesOffered: ["Class 9","Class 10","Class 11"], experience: 8, fees: 650, rating: 4.9, city: "Mumbai", isVerified: true, isFeatured: true, imgInitials: "AS" },
+      { id: 2, name: "Rajesh Kumar", subjects: ["Science", "Chemistry"], classesOffered: ["Class 6","Class 7","Class 8","Class 9"], experience: 12, fees: 480, rating: 4.8, city: "Delhi", isVerified: true, isFeatured: false, imgInitials: "RK" },
+      { id: 3, name: "Neha Verma", subjects: ["English", "Social Studies"], classesOffered: ["Class 5","Class 6","Class 7"], experience: 5, fees: 400, rating: 4.7, city: "Bangalore", isVerified: true, isFeatured: false, imgInitials: "NV" },
+      { id: 4, name: "Vikram Singh", subjects: ["Math", "Competitive Exams"], classesOffered: ["Class 10","Class 11","Class 12","JEE","NEET"], experience: 10, fees: 1200, rating: 5.0, city: "Mumbai", isVerified: true, isFeatured: true, imgInitials: "VS" },
+      { id: 5, name: "Priya Mehta", subjects: ["Physics", "Math"], classesOffered: ["Class 11","Class 12","JEE"], experience: 7, fees: 950, rating: 4.9, city: "Chennai", isVerified: true, isFeatured: false, imgInitials: "PM" },
+      { id: 6, name: "Alok Tiwari", subjects: ["Chemistry", "Science"], classesOffered: ["Class 9","Class 10","Class 11"], experience: 6, fees: 550, rating: 4.6, city: "Delhi", isVerified: false, isFeatured: false, imgInitials: "AT" },
+      { id: 7, name: "Sneha Iyer", subjects: ["English", "Communications"], classesOffered: ["Class 8","Class 9","Class 10"], experience: 4, fees: 380, rating: 4.8, city: "Bangalore", isVerified: true, isFeatured: false, imgInitials: "SI" },
+      { id: 8, name: "Deepak Joshi", subjects: ["Competitive Exams", "Math"], classesOffered: ["Class 12","JEE","NEET"], experience: 9, fees: 1100, rating: 4.9, city: "Mumbai", isVerified: true, isFeatured: false, imgInitials: "DJ" }
+    ];
+
+    // Helper: check class filter
+    function matchesClassFilter(tutor, classValue) {
+      if (classValue === "all") return true;
+      const tutorClasses = tutor.classesOffered;
+      if (classValue === "1-5") return tutorClasses.some(c => c.includes("Class 1")||c.includes("Class 2")||c.includes("Class 3")||c.includes("Class 4")||c.includes("Class 5"));
+      if (classValue === "6-8") return tutorClasses.some(c => c.includes("Class 6")||c.includes("Class 7")||c.includes("Class 8"));
+      if (classValue === "9-10") return tutorClasses.some(c => c.includes("Class 9")||c.includes("Class 10"));
+      if (classValue === "11-12") return tutorClasses.some(c => c.includes("Class 11")||c.includes("Class 12"));
+      if (classValue === "competitive") return tutorClasses.some(c => c.includes("JEE")||c.includes("NEET")||c.includes("Competitive"));
+      return true;
+    }
+    function matchesSubject(tutor, subjectVal) {
+      if (subjectVal === "all") return true;
+      return tutor.subjects.includes(subjectVal);
+    }
+    function matchesFees(tutor, feeVal) {
+      if (feeVal === "all") return true;
+      if (feeVal === "under500") return tutor.fees < 500;
+      if (feeVal === "500-1000") return tutor.fees >= 500 && tutor.fees <= 1000;
+      if (feeVal === "above1000") return tutor.fees > 1000;
+      return true;
+    }
+    function matchesLocation(tutor, locText) {
+      if (!locText.trim()) return true;
+      return tutor.city.toLowerCase().includes(locText.toLowerCase());
+    }
+    function matchesSubjectKeyword(tutor, keyword) {
+      if (!keyword.trim()) return true;
+      return tutor.subjects.some(sub => sub.toLowerCase().includes(keyword.toLowerCase()));
+    }
+
+    function renderTutors() {
+      const locationVal = document.getElementById("locationInput").value;
+      const subjectKeyword = document.getElementById("subjectKeywordInput").value;
+      const classFilter = document.getElementById("classFilter").value;
+      const subjectFilter = document.getElementById("subjectFilter").value;
+      const feesFilter = document.getElementById("feesFilter").value;
+
+      let filtered = tutorsData.filter(t => 
+        matchesLocation(t, locationVal) &&
+        matchesSubjectKeyword(t, subjectKeyword) &&
+        matchesClassFilter(t, classFilter) &&
+        matchesSubject(t, subjectFilter) &&
+        matchesFees(t, feesFilter)
+      );
+      // Sort featured first
+      filtered.sort((a,b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
+      const container = document.getElementById("tutorsContainer");
+      if (!container) return;
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="w-full text-center py-12 text-gray-400"><i class="fas fa-frown text-4xl"></i><p>No tutors match. Try changing filters.</p></div>`;
+        return;
+      }
+      container.innerHTML = filtered.map(tutor => {
+        const starFull = '<i class="fas fa-star text-yellow-400 text-sm"></i>';
+        const starHalf = '<i class="fas fa-star-half-alt text-yellow-400 text-sm"></i>';
+        let stars = '';
+        let full = Math.floor(tutor.rating);
+        for (let i=0; i<full; i++) stars += starFull;
+        if (tutor.rating % 1 >= 0.5) stars += starHalf;
+        return `
+          <div class="tutor-card bg-white rounded-2xl shadow-md p-5 w-72 flex-shrink-0 snap-start transition-all duration-200">
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xl">${tutor.imgInitials}</div>
+              <div><div class="font-bold text-gray-800 flex items-center gap-1">${tutor.name} ${tutor.isVerified ? '<i class="fas fa-check-circle text-blue-500 text-sm"></i>' : ''}</div><div class="flex items-center text-xs">${stars} <span class="ml-1 text-gray-500">(${tutor.rating})</span></div></div>
+              ${tutor.isFeatured ? '<span class="ml-auto featured-badge text-xs font-bold px-2 py-1 rounded-full"><i class="fas fa-gem mr-1"></i>Featured</span>' : ''}
+            </div>
+            <div class="flex flex-wrap gap-1 my-3">${tutor.subjects.map(s => `<span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">${s}</span>`).join('')}</div>
+            <div class="flex justify-between text-sm text-gray-600"><span><i class="fas fa-briefcase"></i> ${tutor.experience}+ years</span><span><i class="fas fa-map-marker-alt"></i> ${tutor.city}</span></div>
+            <div class="mt-2 font-bold text-green-600">₹${tutor.fees} / hour</div>
+            <button class="view-profile-btn mt-4 w-full border border-blue-500 text-blue-600 font-semibold py-2 rounded-xl hover:bg-blue-50 transition" data-id="${tutor.id}">View Profile →</button>
+          </div>
+        `;
+      }).join('');
+      document.querySelectorAll('.view-profile-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = btn.getAttribute('data-id');
+          const tutor = tutorsData.find(t => t.id == id);
+          alert(`✨ ${tutor.name}\n📞 Contact: +91 98765 43210\n💬 WhatsApp available\n📚 Demo class booking ready`);
+        });
+      });
+    }
+
+    // Filter triggers
+    function attachEvents() {
+      document.getElementById("findTutorsBtn")?.addEventListener("click", renderTutors);
+      document.getElementById("locationInput")?.addEventListener("input", renderTutors);
+      document.getElementById("subjectKeywordInput")?.addEventListener("input", renderTutors);
+      document.getElementById("classFilter")?.addEventListener("change", renderTutors);
+      document.getElementById("subjectFilter")?.addEventListener("change", renderTutors);
+      document.getElementById("feesFilter")?.addEventListener("change", renderTutors);
+      document.getElementById("resetFilters")?.addEventListener("click", () => {
+        document.getElementById("classFilter").value = "all";
+        document.getElementById("subjectFilter").value = "all";
+        document.getElementById("feesFilter").value = "all";
+        document.getElementById("locationInput").value = "Mumbai";
+        document.getElementById("subjectKeywordInput").value = "";
+        renderTutors();
+      });
+      document.querySelectorAll(".subject-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          const sub = chip.getAttribute("data-subject");
+          document.getElementById("subjectFilter").value = sub;
+          renderTutors();
+        });
+      });
+    }
+    window.addEventListener("DOMContentLoaded", () => {
+      renderTutors();
+      attachEvents();
+    });
+  </script>
+</body>
+</html>
